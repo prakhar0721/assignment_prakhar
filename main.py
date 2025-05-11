@@ -1,5 +1,19 @@
 import requests
 
+"""
+main.py
+
+Automatically:
+1. Sends a POST request to generate a webhook and auth token.
+2. Solves a SQL problem based on employee age and department.
+3. Submits the final SQL query using the received webhook and token.
+
+Runs on startup without user input.
+
+"""
+
+
+# Function to generate webhook
 def generate_webhook(name, reg_no, email):
     url = "https://bfhldevapigw.healthrx.co.in/hiring/generateWebhook/PYTHON"
     payload = {"name": name, "regNo": reg_no, "email": email}
@@ -7,11 +21,12 @@ def generate_webhook(name, reg_no, email):
     response.raise_for_status()
     return response.json()["webhook"], response.json()["accessToken"]
 
+# Function to fetch sql query basis on the even/odd last digit of the REG number.
 def get_final_sql_query(reg_no):
     last_digit = int(reg_no.strip()[-1])
     
+    # For even Registration number
     if last_digit % 2 == 0:
-        # Acropolis-Q2: Count of younger employees in the same department
         return """
         SELECT 
           e1.EMP_ID,
@@ -27,8 +42,8 @@ def get_final_sql_query(reg_no):
         GROUP BY e1.EMP_ID, e1.FIRST_NAME, e1.LAST_NAME, d.DEPARTMENT_NAME
         ORDER BY e1.EMP_ID DESC;
         """
+    #  Condition for odd Registration number
     else:
-        # Acropolis-Q1: Highest salary not on 1st of the month
         return """
         SELECT 
           p.AMOUNT AS SALARY,
@@ -43,7 +58,7 @@ def get_final_sql_query(reg_no):
         LIMIT 1;
         """
 
-
+# Function to submit query to the defined webhook with token
 def submit_query(webhook_url, token, sql_query):
     headers = {
         "Authorization": token,

@@ -1,8 +1,19 @@
 from main import generate_webhook, get_final_sql_query, submit_query
 
+"""
+test_runner.py
+
+Imports and runs functions from main.py to:
+1. Test webhook generation.
+2. Validate SQL query logic.
+3. Ensure successful submission.
+
+Used for testing the full assignment flow.
+"""
+
 test_cases = [
     {"name": "Prakhar", "regNo": "0827AL221100", "email": "prakharnamdev221037@acropolis.in"},
-    {"name": "Jane Odd", "regNo": "REG12347", "email": "jane2@example.com"}
+    {"name": "Test Odd Registation", "regNo": "REG12347", "email": "test@test.com"}
 ]
 
 for case in test_cases:
